@@ -13,11 +13,9 @@ spec:
     - name: "9025"
       port: 9025
       targetPort: 9000
-      nodePort: 39025
     - name: "2500"
       port: 2500
       targetPort: 2500
-      nodePort: 32500
   selector:
     io.kompose.service: smtpdev
 status:
