@@ -11,12 +11,16 @@ metadata:
 spec:
   ports:
     - name: "9025"
+      protocol: TCP
       port: 9025
       targetPort: 9000
     - name: "2500"
+      protocol: TCP
       port: 2500
       targetPort: 2500
   selector:
     io.kompose.service: smtpdev
+  externalIPs:
+    - 34.209.103.233
 status:
   loadBalancer: {}
