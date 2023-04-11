@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Ingress
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: ingressdev
+  name: ingressdev
+spec:
+  rules:
+    - host: "influxdb.auth.meghportal.com"
+      http:
+        paths:
+          - backend:
+              serviceName: influxdev
+              servicePort: 8086
+            path: /
+    - host: "smtpdev.auth.meghportal.com"
+      http:
+        paths:
+          - backend:
+              serviceName: smtpdev
+              servicePort: 9025
+            path: /
