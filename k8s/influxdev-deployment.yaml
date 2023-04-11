@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: influxdev
+  name: influxdev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: influxdev
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: influxdev
+    spec:
+      containers:
+        - env:
+            - name: DOCKER_INFLUXDB_INIT_ADMIN_TOKEN
+              value: IlDbAxt6CBrOuewFsUdxGS_qXfZmDPhPe_OnS8B5MA99Dghp6r0ZEfh6Rg3cma2eh0Wx34jA0fyr3SNMrmO26Q==
+            - name: DOCKER_INFLUXDB_INIT_BUCKET
+              value: test
+            - name: DOCKER_INFLUXDB_INIT_MODE
+              value: setup
+            - name: DOCKER_INFLUXDB_INIT_ORG
+              value: test
+            - name: DOCKER_INFLUXDB_INIT_PASSWORD
+              value: Qwerty123
+            - name: DOCKER_INFLUXDB_INIT_RETENTION
+              value: 1d
+            - name: DOCKER_INFLUXDB_INIT_USERNAME
+              value: admin
+          image: influxdb:2.0
+          name: influxdbdev
+          ports:
+            - containerPort: 8086
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/lib/influxdb2
+              name: influxdev-claim0
+      restartPolicy: Always
+      volumes:
+        - name: influxdev-claim0
+          persistentVolumeClaim:
+            claimName: influxdev-claim0
+status: {}

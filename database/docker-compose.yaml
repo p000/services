@@ -1,0 +1,111 @@
+version: "3.4"
+
+services:
+  influxdev:
+    image: influxdb:2.0
+    container_name: influxdbdev
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: Qwerty123
+      DOCKER_INFLUXDB_INIT_ORG: test
+      DOCKER_INFLUXDB_INIT_BUCKET: test
+      DOCKER_INFLUXDB_INIT_RETENTION: 1d
+      DOCKER_INFLUXDB_INIT_ADMIN_TOKEN: "IlDbAxt6CBrOuewFsUdxGS_qXfZmDPhPe_OnS8B5MA99Dghp6r0ZEfh6Rg3cma2eh0Wx34jA0fyr3SNMrmO26Q=="
+    volumes:
+      - ./data/influxdb/data:/var/lib/influxdb2
+    ports:
+      - "8086:8086"
+  miniodev:
+    image: minio/minio
+    container_name: miniodev
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ROOT_USER: miniomegh
+      MINIO_ROOT_PASSWORD: Megh@MinIO
+    hostname: minio
+    command: server /data --console-address ":9001"
+    volumes:
+      - ./data/minio/data:/data
+    # For multiple disks minio server command runs with mounted disk numbers.
+    # command: server /data{1...4} --console-address ":9001"
+    # volumes:
+    #   - ./minio/data1:/data1
+    #   - ./minio/data2:/data2
+    #   - ./minio/data3:/data3
+    #   - ./minio/data4:/data4
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9000/minio/health/live" ]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+  mongodev:
+    image: mongo:4.4-bionic
+    container_name: mongodbdev
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: mongoMegh
+    #   MONGO_INITDB_ROOT_PASSWORD: MeghMongoDB2020
+    volumes:
+      - ./data/mongodb/data:/data/db
+    ports:
+      - "27017:27017"
+    # command: [ --auth ]
+    hostname: mongodb
+  redisdev:
+    image: redis
+    container_name: redisdev
+    volumes:
+      - ./data/redis/data:/data
+    ports:
+      - "6379:6379"
+  smtpdev:
+    image: inbucket/inbucket:stable
+    container_name: smtpdev
+    ports:
+      - "9025:9000"
+      - "2500:2500"
+  nsqlookupddev:
+    image: nsqio/nsq
+    container_name: nsqlookupddev
+    command: /nsqlookupd
+    ports:
+      - "4160:4160"
+      - "4161:4161"
+  nsqddev:
+    image: nsqio/nsq
+    container_name: nsqddev
+    command: /nsqd --lookupd-tcp-address=10.110.0.64:4160
+    depends_on:
+      - nsqlookupddev
+    ports:
+      - "4150:4150"
+      - "4151:4151"
+  nsqadmindev:
+    image: nsqio/nsq
+    container_name: nsqadmindev
+    command: /nsqadmin --lookupd-http-address=10.110.0.64:4161
+    depends_on:
+      - nsqlookupddev
+    ports:
+      - "4171:4171"
+  mariadb:
+    container_name: mariadb
+    image: linuxserver/mariadb:latest
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./data/mariadb/data:/config
+    environment:
+      MYSQL_ROOT_PASSWORD: "MeghMySQL121200"
+      MYSQL_ROOT_USER: root
+      MYSQL_DATABASE: authelia
+      MYSQL_USER: authelia
+      MYSQL_PASSWORD: "meghauth212144"  
+    restart: unless-stopped    
+         
+
+# networks:
+#   default:
+#     name: meghnet

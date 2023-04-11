@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mongodev
+  name: mongodev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mongodev
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mongodev
+    spec:
+      containers:
+        - image: mongo:4.4-bionic
+          name: mongodbdev
+          ports:
+            - containerPort: 27017
+          resources: {}
+          volumeMounts:
+            - mountPath: /data/db
+              name: mongodev-claim0
+      hostname: mongodb
+      restartPolicy: Always
+      volumes:
+        - name: mongodev-claim0
+          persistentVolumeClaim:
+            claimName: mongodev-claim0
+status: {}

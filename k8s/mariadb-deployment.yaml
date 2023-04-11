@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: mariadb
+  name: mariadb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: mariadb
+    spec:
+      containers:
+        - env:
+            - name: MYSQL_DATABASE
+              value: authelia
+            - name: MYSQL_PASSWORD
+              value: meghauth212144
+            - name: MYSQL_ROOT_PASSWORD
+              value: MeghMySQL121200
+            - name: MYSQL_ROOT_USER
+              value: root
+            - name: MYSQL_USER
+              value: authelia
+          image: linuxserver/mariadb:latest
+          name: mariadb
+          ports:
+            - containerPort: 3306
+          resources: {}
+          volumeMounts:
+            - mountPath: /config
+              name: mariadb-claim0
+      restartPolicy: Always
+      volumes:
+        - name: mariadb-claim0
+          persistentVolumeClaim:
+            claimName: mariadb-claim0
+status: {}

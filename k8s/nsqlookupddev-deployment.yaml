@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nsqlookupddev
+  name: nsqlookupddev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: nsqlookupddev
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: nsqlookupddev
+    spec:
+      containers:
+        - args:
+            - /nsqlookupd
+          image: nsqio/nsq
+          name: nsqlookupddev
+          ports:
+            - containerPort: 4160
+            - containerPort: 4161
+          resources: {}
+      restartPolicy: Always
+status: {}

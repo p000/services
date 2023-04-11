@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nsqlookupddev
+  name: nsqlookupddev
+spec:
+  ports:
+    - name: "4160"
+      port: 4160
+      targetPort: 4160
+    - name: "4161"
+      port: 4161
+      targetPort: 4161
+  selector:
+    io.kompose.service: nsqlookupddev
+status:
+  loadBalancer: {}

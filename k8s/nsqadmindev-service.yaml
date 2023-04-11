@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: nsqadmindev
+  name: nsqadmindev
+spec:
+  ports:
+    - name: "4171"
+      port: 4171
+      targetPort: 4171
+  selector:
+    io.kompose.service: nsqadmindev
+status:
+  loadBalancer: {}

@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: ./kompose convert
+    kompose.version: 1.26.0 (40646f47)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: redisdev
+  name: redisdev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: redisdev
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: ./kompose convert
+        kompose.version: 1.26.0 (40646f47)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: redisdev
+    spec:
+      containers:
+        - image: redis
+          name: redisdev
+          ports:
+            - containerPort: 6379
+          resources: {}
+          volumeMounts:
+            - mountPath: /data
+              name: redisdev-claim0
+      restartPolicy: Always
+      volumes:
+        - name: redisdev-claim0
+          persistentVolumeClaim:
+            claimName: redisdev-claim0
+status: {}
